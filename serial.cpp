@@ -13,7 +13,7 @@ Serial::Serial(QObject *parent)
 
 Serial::~Serial()
 {
-    Quit();
+    qInfo() << this << "Serial thread deconstructed";
 }
 
 void Serial::Start(const ConnectionSettings &settings, QList<QByteArray> *ptrRxBuff, QList<QByteArray> *ptrTxBuff,
@@ -56,6 +56,7 @@ void Serial::ConnectTo(const Serial::ConnectionSettings &settings)
     else
     {
         emit error(m_serial->portName(), tr("%1").arg(m_serial->errorString()));
+        loop.quit();
     }
 }
 
@@ -119,8 +120,6 @@ void Serial::sendData()
 void Serial::Quit()
 {
     DisonnectFrom();
-
-    m_exit = true;
 }
 
 void Serial::GiveRxData(QByteArray &rxData)
